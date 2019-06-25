@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+#modprobe spidev.ko
+#modprobe 100ask_adxl34x-spi.ko
+#modprobe 100ask_rc-nec.ko
+#modprobe 100ask_irda.ko
+#modprobe 100ask_ds18b20.ko
+#modprobe 100ask_dh11.ko
+#echo -e "\033[32m 100ask load  modules ok! \033[0m"
+#/etc/arduino-otg.sh &

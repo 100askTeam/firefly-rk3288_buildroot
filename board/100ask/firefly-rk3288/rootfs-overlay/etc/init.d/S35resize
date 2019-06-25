@@ -1,0 +1,25 @@
+#!/bin/sh
+
+cd /usr/share/lighttpd
+mkdir  cache lib log  run  upload
+mkdir  -p  cache/lighttpd/
+mkdir  -p  lib/lighttpd/sockets/
+chmod -R 777 /usr/share/lighttpd/
+
+#Get the way to start the device 
+LINE=$(cat /proc/cmdline )
+VAR=$(echo ${LINE:22:10} | awk '{print $1}')
+
+if [ $VAR -ne root=ubi0 ]; then
+	echo "nand flash boot !"
+	break;
+
+else
+	resize2fs /dev/mmcblk0p1
+fi
+
+
+
+cd /etc/init.d
+rm S35resize
+echo "config  ok !"
