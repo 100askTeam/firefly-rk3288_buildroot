@@ -1,11 +1,63 @@
 #!/bin/sh
+#
+# Start arduino....
+#
+#Get the way to start the device
+LINE=$(cat /proc/cmdline )
+VAR=$(echo ${LINE:22:10} | awk '{print $1}')
+# Get the process pid by name
+PIDS=$(ps -A |grep "am335x_app"| awk '{print $1}')
+UBI='root=ubi0'
 
+start() {
 
-#modprobe spidev.ko
-#modprobe 100ask_adxl34x-spi.ko
-#modprobe 100ask_rc-nec.ko
-#modprobe 100ask_irda.ko
-#modprobe 100ask_ds18b20.ko
-#modprobe 100ask_dh11.ko
-#echo -e "\033[32m 100ask load  modules ok! \033[0m"
-#/etc/arduino-otg.sh &
+if [ $VAR = $UBI ]; then
+        dd  if=/dev/zero  of=/root/disk.img  bs=1M  count=10 > /dev/null
+        mkdosfs  /root/disk.img
+        mount -t vfat -o sync  /root/disk.img  /arduino
+        modprobe  g_mass_storage file=/root/disk.img  removable=1
+else
+        mkdosfs  /dev/mmcblk0p2
+        mount -t vfat   /dev/mmcblk0p2  /arduino
+        modprobe  g_mass_storage file=/dev/mmcblk0p2   removable=1
+
+fi
+
+modprobe 100ask-spidev.ko
+modprobe 100ask_adxl34x-spi.ko
+modprobe 100ask_rc-nec.ko
+modprobe 100ask_irda.ko
+modprobe 100ask_ds18b20.ko
+modprobe 100ask_dh11.ko
+echo -e "\033[32m 100ask load  modules ok! \033[0m"
+/etc/arduino-otg.sh &
+}
+
+stop() {
+
+killall  arduino-otg.sh &
+#rmmod  100ask-spidev.ko
+rmmod  100ask_adxl34x-spi.ko
+rmmod  100ask_rc-nec.ko
+rmmod  100ask_irda.ko
+rmmod  100ask_ds18b20.ko
+rmmod  100ask_dh11.ko
+rmmod  g_mass_storage
+umount /arduino
+echo  remove arduino  ok! 
+}
+
+case "$1" in 
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	*)
+		echo "Usage: $0 {start| stop|restart}"
+		exit 1
+esac
+
+exit $?
+
