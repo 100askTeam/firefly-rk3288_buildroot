@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#Prohibit display of cursor
+echo -e "\033[?25l"  > /dev/tty1
+
+#close lcd sleep
+echo -e "\033[9;0]" > /dev/tty1
+
+export TSLIB_TSDEVICE=/dev/input/event0
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=/etc/ts.conf
+export TSLIB_FBDEVICE=/dev/fb0
+
+if [ ! -e /etc/pointercal ]
+then
+        /usr/bin/ts_calibrate
+fi
+
+
+#digitpic /home/MSYH.TTF &
+

@@ -1,0 +1,156 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>Web摄像头监控</title>
+  <link href="layout.css" rel="stylesheet" type="text/css" />
+  <link type="text/css" href="jquery.ui.custom.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!--背景-->
+
+  <div class="background"><img src="bg1.jpg" alt="" /></div><!--主内容开始-->
+  
+  <script type="text/javascript">
+
+  var imageNr = 0; // Serial number of current image
+  var finished = new Array(); // References to img objects which have finished downloading
+  var paused = false;
+
+  function createImageLayer() {
+  var img = new Image();
+  img.style.position = "absolute";
+  img.style.zIndex = -1;
+  img.onload = imageOnload;
+  img.onclick = imageOnclick;
+  img.src = "/?action=snapshot&n=" + (++imageNr);
+  var webcam = document.getElementById("webcam");
+  webcam.insertBefore(img, webcam.firstChild);
+  }
+
+  // Two layers are always present (except at the very beginning), to avoid flicker
+  function imageOnload() {
+  this.style.zIndex = imageNr; // Image finished, bring to front!
+  while (1 < finished.length) {
+    var del = finished.shift(); // Delete old image(s) from document
+    del.parentNode.removeChild(del);
+  }
+  finished.push(this);
+  if (!paused) createImageLayer();
+  }
+
+  function imageOnclick() { // Clicking on the image will pause the stream
+	  paused = !paused;
+	  if (!paused) 
+	  {
+			createImageLayer();
+			document.getElementById("button1").value="停止";
+	  } else
+	  {
+			document.getElementById("button1").value = "开始";
+	  }          
+  }
+  //]]>
+  </script>
+  <!-- 时间:开始位置 -->
+  <script language="javascript" type="text/javascript">
+//<![CDATA[
+    function siteTime(){
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth()+1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        document.getElementById("sitetime").innerHTML=todayYear+" 年 "+todayMonth+" 月 "+todayDate+" 日 "+todayHour+" 时 "+todayMinute+" 分 "+todaySecond+" 秒";
+    }
+    siteTime();
+  //]]>
+  </script><!-- 时间:结束位置 -->
+<script type="text/javascript" src="jquery.js">
+</script><script type="text/javascript" src="jquery.rotate.js">
+</script><script type="text/javascript" src="jquery.ui.core.min.js">
+</script><script type="text/javascript" src="jquery.ui.widget.min.js">
+</script><script type="text/javascript" src="jquery.ui.tabs.min.js">
+</script><script type="text/javascript" src="JQuerySpinBtn.js">
+</script><script type="text/javascript" src="functions.js">
+</script><script type="text/javascript">
+//<![CDATA[
+        $(function() {
+                $("#tabs").tabs();
+        });
+
+        $(document).ready(function() {
+                //top.resizeTo($(window).width(), $(document).height() + (top.outerHeight - $(window).height()));
+        });
+  //]]>
+  </script><script type="text/javascript">
+//<![CDATA[
+	fillTabs();
+  //]]>
+  </script>
+
+  <div id="container">
+    <h1 style="padding-top:30px" align="center"><b>百问网 Web摄像头监控 项目</b></h1><!--模块-->
+
+    <div id="main">
+      <div class="left-side">
+        <div style="position:absolute;z-index:1;"><img src="frame.png" width="740" height="570" /></div>
+
+        <div style="padding-left:48px; padding-top:40px" id="webcam">
+			<body onload="createImageLayer();">
+          <noscript><img id="streamimage" src="/?action=snapshot" /></noscript>
+        </div>
+      </div><!--右侧-->
+
+      <div class="right-side">
+        <!--日期-->
+
+        <div class="date">
+          <div class="d-top">
+            <span align="center" style="font-size:15px; color:##d0dae4;" id="sitetime"></span>
+          </div>
+        </div>
+
+        <div style="overflow-y: auto;">
+          <div id="tabs">
+            <ul id="ul_tabs"></ul>
+          </div>
+        </div>
+
+        <div style=" margin-left:10px; padding-top:10px"></div><input id="button1" type="button" style="width:350px;height:30px; background-color:orange; color:#FFFFFF;" onclick="imageOnclick()" value="停止" />
+      </div>
+    </div>
+  </div><!--主内容结束-->
+  <!--[if IE 6]> <script src="EvPng.js" type="text/javascript"></script> 
+<script language="javascript" type="text/javascript"> 
+EvPNG.fix("*");
+</script> 
+<![endif]-->
+  <script type="text/javascript">
+//<![CDATA[
+
+  $(document).ready(function () {
+        
+  });
+  //]]>
+  </script>
+</body>
+</html>
