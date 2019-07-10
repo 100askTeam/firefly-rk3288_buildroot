@@ -1,5 +1,7 @@
 board=board/100ask/firefly-rk3288/
 
+
+cp $board/build_img.sh output/build/uboot-master/
 chmod +x output/build/uboot-master/build_img.sh
 output/build/uboot-master/build_img.sh
 
