@@ -11,6 +11,11 @@ UBI='root=ubi0'
 
 start() {
 
+mount -t debugfs debugfs /sys/kernel/debug/
+echo 1 > /sys/kernel/debug/clk/pclk_gpio6/clk_enable_count
+echo 1 > /sys/kernel/debug/clk/pclk_gpio7/clk_enable_count
+echo 1 > /sys/kernel/debug/clk/pclk_gpio8/clk_enable_count
+
 if [ $VAR = $UBI ]; then
         dd  if=/dev/zero  of=/root/disk.img  bs=1M  count=10 > /dev/null
         mkdosfs  /root/disk.img
@@ -28,7 +33,7 @@ modprobe 100ask_adxl34x-spi.ko
 modprobe 100ask_rc-nec.ko
 modprobe 100ask_irda.ko
 modprobe 100ask_ds18b20.ko
-modprobe 100ask_dh11.ko
+modprobe 100ask_dht11.ko
 echo -e "\033[32m 100ask load  modules ok! \033[0m"
 /etc/arduino-otg.sh &
 }
@@ -41,7 +46,7 @@ rmmod  100ask_adxl34x-spi.ko
 rmmod  100ask_rc-nec.ko
 rmmod  100ask_irda.ko
 rmmod  100ask_ds18b20.ko
-rmmod  100ask_dh11.ko
+rmmod  100ask_dht11.ko
 rmmod  g_mass_storage
 umount /arduino
 echo  remove arduino  ok! 
